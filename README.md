@@ -1,5 +1,5 @@
-[![Pub.dev package](https://img.shields.io/badge/pub.dev-events__emitter-blue)](https://pub.dev/packages/flutter_apprun)
-[![GitHub repository](https://img.shields.io/badge/GitHub-EventEmitter--dart-blue?logo=github)](https://github.com/yysun/flutter_apprun)
+[![Pub.dev package](https://img.shields.io/badge/pub.dev-flutter_apprun-blue)](https://pub.dev/packages/flutter_apprun)
+[![GitHub repository](https://img.shields.io/badge/GitHub-flutter_apprun--dart-blue?logo=github)](https://github.com/yysun/flutter_apprun)
 
 # Flutter AppRun
 A lightweight, easy-to-use, event-driven state management system, highly inspired by [AppRun JS](https://apprun.js.org).
