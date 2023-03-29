@@ -30,12 +30,6 @@ import 'package:flutter_apprun/flutter_apprun.dart';
 
 Use `AppRunWidget` in your widget tree.
 
-* The `state` is the initial state
-* The `update` is the collection of event handlers.
-* The `builder` is to display the state, which is called whenever the state changes.
-* Use `app.run` to trigger global events.
-* Use `AppRun.of(context).run` to trigger local events.
-
 ```dart
 AppRunWidget(
   state: initialState,
@@ -45,6 +39,14 @@ AppRunWidget(
   }
 )
 ```
+
+* The `state` is the initial state
+* The `update` is the collection of event handlers.
+* The `builder` is to display the state, which is called whenever the state changes.
+* Use `app.run` to trigger global events.
+* Use `AppRun.of(context).run` to trigger local events.
+
+
 
 ## Example
 

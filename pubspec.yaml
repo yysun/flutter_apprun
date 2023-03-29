@@ -1,6 +1,6 @@
 name: flutter_apprun
 description: A lightweight, easy-to-use, event-driven state management system, highly inspired by AppRun JS
-version: 0.8.0
+version: 0.8.1
 repository: https://github.com/yysun/flutter_apprun
 
 environment:
