@@ -3,19 +3,13 @@ import 'package:flutter/widgets.dart';
 // typedef EventCallback = void Function([dynamic arg]);
 typedef EventCallback = Function;
 
-class AppRun {
-  static final AppRun _singleton = AppRun._internal();
-  factory AppRun() {
-    return _singleton;
-  }
-  AppRun._internal();
-  static final _AppRun _apprun = _AppRun();
-  static void on(event, callback) => _apprun.on(event, callback);
-  static int run(event, [data]) => _apprun.run(event, data);
-  static void off(event, [callback]) => _apprun.off(event, callback);
-}
+final app = AppRun();
 
-class _AppRun<E> {
+class AppRun<E> {
+  static AppRun of(BuildContext context) => context.widget is AppRunWidget
+      ? (context.widget as AppRunWidget)._app
+      : app;
+
   final _events = {};
   void on(E event, EventCallback callback) {
     _events[event] ??= <EventCallback>[];
@@ -47,95 +41,39 @@ class _AppRun<E> {
 // typedef Update<E, S> = Map<E, Action<S>>;
 
 typedef Update = Map;
+typedef View<T> = Widget Function(BuildContext context, T state);
 
 bool isGlobal(event) => event.toString().startsWith('@');
 
-// mixin AppRunMixin<E, S, W extends StatefulWidget> on State<W> {
-//   final _AppRun<E> _localAppRun = _AppRun<E>();
-//   final _listeners = {};
-
-//   late S state;
-//   late Map update = {};
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _init();
-//   }
-
-//   void _init() {
-//     update.forEach((event, action) {
-//       void newAction(data) {
-//         var newState = data == null ? action(state) : action(state, data);
-//         if (newState != null) {
-//           setState(() {
-//             state = newState;
-//           });
-//         }
-//       }
-
-//       _listeners[event] = newAction;
-//       on(event, newAction);
-//     });
-//   }
-
-//   @override
-//   void dispose() {
-//     _listeners.forEach((event, listener) {
-//       isGlobal(event)
-//           ? AppRun.off(event, listener)
-//           : _localAppRun.off(event, listener);
-//     });
-//     super.dispose();
-//   }
-
-//   void on(E event, EventCallback callback) {
-//     return isGlobal(event)
-//         ? AppRun.on(event, callback)
-//         : _localAppRun.on(event, callback);
-//   }
-
-//   int run(E event, [dynamic data]) {
-//     return isGlobal(event)
-//         ? AppRun.run(event, data)
-//         : _localAppRun.run(event, data);
-//   }
-
-//   void off(E event, [EventCallback? callback]) {
-//     return isGlobal(event)
-//         ? AppRun.off(event, callback)
-//         : _localAppRun.off(event, callback);
-//   }
-// }
-
-abstract class AppRunWidget<T, E> extends StatefulWidget {
-  final _AppRun<E> _appRun = _AppRun<E>();
+class AppRunWidget<T, E> extends StatefulWidget {
+  final AppRun<E> _app = AppRun<E>();
   final T state;
   final Update update;
+  final View<T> builder;
 
-  AppRunWidget({Key? key, required this.state, required this.update})
+  AppRunWidget(
+      {Key? key,
+      required this.state,
+      required this.update,
+      required this.builder})
       : super(key: key);
 
   @override
   State<AppRunWidget<T, E>> createState() => _AppRunWidgetState<T, E>();
 
   void on(E event, EventCallback callback) {
-    return isGlobal(event)
-        ? AppRun.on(event, callback)
-        : _appRun.on(event, callback);
+    return isGlobal(event) ? app.on(event, callback) : _app.on(event, callback);
   }
 
   int run(E event, [dynamic data]) {
-    return isGlobal(event) ? AppRun.run(event, data) : _appRun.run(event, data);
+    return isGlobal(event) ? app.run(event, data) : _app.run(event, data);
   }
 
   void off(E event, [EventCallback? callback]) {
     return isGlobal(event)
-        ? AppRun.off(event, callback)
-        : _appRun.off(event, callback);
+        ? app.off(event, callback)
+        : _app.off(event, callback);
   }
-
-  Widget build(BuildContext context, state);
 }
 
 class _AppRunWidgetState<T, E> extends State<AppRunWidget<T, E>> {
@@ -144,7 +82,7 @@ class _AppRunWidgetState<T, E> extends State<AppRunWidget<T, E>> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.build(context, state);
+    return widget.builder(context, state);
   }
 
   @override

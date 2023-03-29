@@ -28,48 +28,53 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends AppRunWidget {
+class HomePage extends StatelessWidget {
   final String title;
 
-  HomePage({super.key, required this.title})
-      : super(state: initialState, update: update);
+  const HomePage({super.key, required this.title});
 
   @override
-  Widget build(BuildContext context, state) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              '$state',
-              style: Theme.of(context).textTheme.headlineMedium,
+  Widget build(BuildContext context) {
+    return AppRunWidget(
+      state: initialState,
+      update: update,
+      builder: (BuildContext context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(title),
+          ),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  '$state',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            heroTag: 'minus',
-            // onPressed: () => run('add', -1),
-            onPressed: () => run('-1'),
-            tooltip: 'Decrement',
-            child: const Icon(Icons.remove),
           ),
-          FloatingActionButton(
-            heroTag: 'plus',
-            // onPressed: () => run('add', 1),
-            onPressed: () => run('+1'),
-            tooltip: 'Increment',
-            child: const Icon(Icons.add),
+          floatingActionButton: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton(
+                heroTag: 'minus',
+                onPressed: () => app.run('@add', -1),
+                // onPressed: () => AppRun.of(context).run('-1'),
+                tooltip: 'Decrement',
+                child: const Icon(Icons.remove),
+              ),
+              FloatingActionButton(
+                heroTag: 'plus',
+                onPressed: () => app.run('@add', 1),
+                // onPressed: () => AppRun.of(context).run('+1'),
+                tooltip: 'Increment',
+                child: const Icon(Icons.add),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
